@@ -20,14 +20,9 @@ package com.asfug.utils {
 		 * @param	numZeros	number of zeros to add
 		 * @return
 		 */
-		public static function addZero(n:Number, numZeros:int = 1):String 
+		public static function addLeadingZero(n:int, numZeros:int = 1):String 
 		{
-			var str:String = n + '';
-			while (str.length < numZeros + 1)
-			{
-				str = "0" + str;
-			}
-			return str;
+			return (new Array(numZeros).join('0')) + n;
 		}
 		
 	}
