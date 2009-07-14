@@ -1,14 +1,18 @@
-/**
- * Created by Ed Moore
- * Based off javascript code by Samuel Liew (http://www.samliew.com)
- */
 package com.asfug.validation
 {
+	/**
+	 * ...
+	 * @author Ed Moore
+	 * Based off javascript code by Samuel Liew (http://www.samliew.com)
+	 */
 	public class SingaporeNRIC
 	{
 		/**
-		 *  Format: SXXXXXXXA
-		 *	Where # is a number, and the first letter is either S,T,F,G.
+		 * Checks if string is a Singapore NRIC or FIN number
+		 * Format: SXXXXXXXA
+		 * Where # is a number, and the first letter is either S,T,F,G.
+		 * @param	str	String to check
+		 * @return	true or false
 		 */
 		public static function isNRIC(str:String):Boolean
 		{

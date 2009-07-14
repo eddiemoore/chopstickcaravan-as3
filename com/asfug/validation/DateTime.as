@@ -1,14 +1,17 @@
-/**
- * Created by Ed Moore
- */
 package com.asfug.validation
 {
+	/**
+	 * ...
+	 * @author Ed Moore
+	 */
 	public class DateTime
-	{	
+	{
 		/**
-		 *	Enter date in DD/MM/YYYY HH:MM:SS format. / or . or - accepted as separators for date.
-		 * 	Can validate just date.
-		 * 	Can validate just time in 12 or 24hour format. Seconds are optional.
+		 * Enter date in DD/MM/YYYY HH:MM:SS format. / or . or - accepted as separators for date.
+		 * Can validate just date.
+		 * Can validate just time in 12 or 24hour format. Seconds are optional.
+		 * @param	str
+		 * @return
 		 */
 		public static function isDateTime(str:String):Boolean
 		{
