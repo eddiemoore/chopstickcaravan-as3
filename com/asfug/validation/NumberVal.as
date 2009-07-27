@@ -4,7 +4,7 @@ package com.asfug.validation
 	 * ...
 	 * @author Ed Moore
 	 */
-	public class Number
+	public class NumberVal
 	{
 		/**
 		 * Ckecks is string is a number. Positive or negative.

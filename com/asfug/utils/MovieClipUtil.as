@@ -1,9 +1,11 @@
 ﻿package com.asfug.utils
 {
+	import flash.display.DisplayObjectContainer;
+	import flash.display.FrameLabel;
 	import flash.display.MovieClip;
 	
 	/**
-	 * ...
+	 * Utilities for MovieClips
 	 * @author Ed Moore
 	 */
 	public class MovieClipUtil 
@@ -38,6 +40,14 @@
 				}
 			}
 			return false;
+		}
+		/**
+		 * Remove all children in a DisplayObjectContainer
+		 * @param	mc
+		 */
+		public static function removeAllChildren(doc:DisplayObjectContainer):void
+		{
+			while (doc.numChildren > 0)	doc.removeChildAt(0);
 		}
 	}
 	
