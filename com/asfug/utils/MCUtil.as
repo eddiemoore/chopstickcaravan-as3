@@ -8,7 +8,7 @@
 	 * Utilities for MovieClips
 	 * @author Ed Moore
 	 */
-	public class MovieClipUtil 
+	public class MCUtil 
 	{
 		/**
 		 * Adds script at frame given frame label
