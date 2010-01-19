@@ -15,7 +15,7 @@
 	import flash.net.URLVariables;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
-	import flash.utils.Dictionary;
+	//import flash.utils.Dictionary;
 	/**
 	 * ...
 	 * @author Ed Moore
