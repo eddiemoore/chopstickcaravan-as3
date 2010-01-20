@@ -13,12 +13,16 @@
 		private var _mc:MovieClip;
 		public var isChecked:Boolean;
 		internal var name:String;
+		private var _uncheckedFrame:String;
+		private var _checkedFrame:String;
 		
-		public function RadioButton(mc:MovieClip, checked:Boolean = false) 
+		public function RadioButton(mc:MovieClip, checked:Boolean = false, checkedFrame:String = 'checked', uncheckedFrame:String = 'unchecked') 
 		{
 			_mc = mc;
 			isChecked = checked;
 			name = _mc.name;
+			_checkedFrame = checkedFrame;
+			_uncheckedFrame = uncheckedFrame;
 			
 			if (isChecked)	check();
 			else			uncheck();
@@ -37,7 +41,7 @@
 		 */
 		public function check():void
 		{
-			_mc.gotoAndStop('checked');
+			_mc.gotoAndStop(_checkedFrame);
 			isChecked = true;
 			dispatchEvent(new ToggleButtonEvent(ToggleButtonEvent.TOGGLE_BUTTON_CHECKED));
 		}
@@ -46,7 +50,7 @@
 		 */
 		public function uncheck():void
 		{
-			_mc.gotoAndStop('unchecked');
+			_mc.gotoAndStop(_uncheckedFrame);
 			isChecked = false;
 			dispatchEvent(new ToggleButtonEvent(ToggleButtonEvent.TOGGLE_BUTTON_UNCHECKED));
 		}
