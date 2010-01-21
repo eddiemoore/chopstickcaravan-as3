@@ -4,6 +4,7 @@
 	import com.asfug.components.Dropdown;
 	import com.asfug.components.RadioButtonGroup;
 	import com.asfug.events.FormEvent;
+	import com.asfug.utils.StringUtil;
 	import com.asfug.validation.Email;
 	import com.asfug.validation.NumberVal;
 	import com.asfug.validation.SingaporeNRIC;
@@ -62,6 +63,15 @@
 			if (restrict.length > 0)
 				field.restrict = restrict;
 			initField(field, maxChar);
+		}
+		
+		public function addTextArea(field:TextField, variable:String, manditory:Boolean = true, error_text:String = '', restrict:String = '', max_words:int = 0):void
+		{
+			_fields.push( { field:field, variable:variable, defaultText:field.text, manditory:manditory, type:FormFieldTypes.TEXT_AREA, restrict:restrict, error:error_text, maxWords:max_words });
+			
+			if (restrict.length > 0)
+				field.restrict = restrict;
+			initField(field, 0);
 		}
 		
 		/**
@@ -224,7 +234,36 @@
 								}
 							}
 						}
-						_formVars[currentObj.variable] = currentObj.field.text;
+						if (currentObj.field.text == currentObj.defaultText)
+							_formVars[currentObj.variable] = '';
+						else
+							_formVars[currentObj.variable] = currentObj.field.text;
+					break;
+					case FormFieldTypes.TEXT_AREA :
+						if (currentObj.manditory)
+						{
+							if (currentObj.field.text == '' || currentObj.field.text == currentObj.defaultText)
+							{
+								valid = false;
+								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, currentObj.error, currentObj.field));
+								return false;
+							}
+							if (currentObj.maxWords > 0)
+							{
+								var count:int = StringUtil.trim(StringUtil.removeDoubleSpaceing(currentObj.field.text), ' ').split(' ').length;
+								trace("count : " + count);
+								if (count > currentObj.maxWords)
+								{
+									valid = false;
+									dispatchEvent(new FormEvent(FormEvent.FIELD_OUTOFRANGE, false, false, currentObj.error, currentObj.field));
+									return false;
+								}
+							}
+						}
+						if (currentObj.field.text == currentObj.defaultText)
+							_formVars[currentObj.variable] = '';
+						else
+							_formVars[currentObj.variable] = currentObj.field.text;
 					break;
 					case FormFieldTypes.EMAIL_FIELD :
 						if (currentObj.manditory)
