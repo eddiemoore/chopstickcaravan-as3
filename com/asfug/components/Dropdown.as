@@ -101,7 +101,10 @@
 			_dropdownOpen = true;
 			dispatchEvent(new DropdownEvent(DropdownEvent.OPENED_DROP_DOWN));
 		}
-		
+		/**
+		 * Creates mask for drop down items.
+		 * Initialises scrolling
+		 */
 		private function createMask():void
 		{
 			_mask = new Shape();
@@ -201,7 +204,10 @@
 			else
 				return _itemArray[_selectedIndex].data;
 		}
-		
+		/**
+		 * Sets the selected item to specific value in item array
+		 * @param	index	Index value of item in item array
+		 */
 		public function setSelectedIndex(index:int):void 
 		{
 			_selectedIndex = index;

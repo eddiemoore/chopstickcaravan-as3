@@ -17,7 +17,13 @@
 		private var _uncheckedFrame:String;
 		private var _checkedFrame:String;
 		
-		
+		/**
+		 * Radio Button
+		 * @param	mc				Movie Clip to be the radio Button
+		 * @param	checked			Sets if radio button should be selected by default
+		 * @param	checkedFrame	Frame label for checked frame. DEFAULT : 'checked'
+		 * @param	uncheckedFrame	Frame label for unchecked frame. DEFAULT : 'unchecked'
+		 */
 		public function RadioButton(mc:MovieClip, checked:Boolean = false, checkedFrame:String = 'checked', uncheckedFrame:String = 'unchecked') 
 		{
 			_mc = mc;
@@ -34,7 +40,10 @@
 			_mc.mouseChildren = false;
 			_mc.buttonMode = true;
 		}
-		
+		/**
+		 * On click, check the Toggle Button
+		 * @param	e
+		 */
 		protected function hClick(e:MouseEvent):void 
 		{
 			if (!isChecked) check();
