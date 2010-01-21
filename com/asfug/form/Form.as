@@ -1,6 +1,8 @@
 ﻿package com.asfug.form 
 {
 	import com.asfug.components.Checkbox;
+	import com.asfug.components.Dropdown;
+	import com.asfug.components.RadioButtonGroup;
 	import com.asfug.events.FormEvent;
 	import com.asfug.validation.Email;
 	import com.asfug.validation.NumberVal;
@@ -95,7 +97,6 @@
 			field.restrict = '0-9';
 			initField(field, maxChar);
 		}
-		
 		/**
 		 * Add NRIC/FIN Field
 		 * @param	field		Text Field to validate
@@ -112,7 +113,11 @@
 			field.restrict = 'a-zA-Z0-9';
 			initField(field, maxChar);
 		}
-		
+		/**
+		 * Initialises Fields
+		 * @param	field	Field to initialise
+		 * @param	maxChar	Maximum characters in field
+		 */
 		private function initField(field:TextField, maxChar:int = 0):void
 		{
 			field.type = TextFieldType.INPUT;
@@ -121,7 +126,6 @@
 			field.addEventListener(FocusEvent.FOCUS_IN, focusIn);
 			field.addEventListener(FocusEvent.FOCUS_OUT, focusOut);
 		}
-		
 		/**
 		 * Add Checkbox
 		 * @param	cb			Checkbox to add.
@@ -134,8 +138,36 @@
 			//_fields[cb.name] = { field:cb, manditory:manditory, type:'checkbox', error:error_text};
 			_fields.push({ field:cb, variable:variable, manditory:manditory, type:FormFieldTypes.CHECKBOX, error:error_text});
 		}
-		
-		public function addAdditionalVariable(string:String, variable:String, manditory:Boolean = true, error_text:String = '' ):void 
+		/**
+		 * Add Radio Button Group
+		 * @param	rbg			Radio button group to add
+		 * @param	variable	Variable name to send to server.
+		 * @param	manditory	If checkbox is manditory.
+		 * @param	error_text	Error message to display.
+		 */
+		public function addRadioButtonGroup(rbg:RadioButtonGroup, variable:String, manditory:Boolean = true, error_text:String = ''):void
+		{
+			_fields.push({ field:rbg, variable:variable, manditory:manditory, type:FormFieldTypes.RADIO_BUTTON_GROUP, error:error_text});
+		}
+		/**
+		 * Add Dropdown
+		 * @param	dropdown	Dropdown to add
+		 * @param	variable	Variable name to send to server.
+		 * @param	manditory	If checkbox is manditory.
+		 * @param	error_text	Error message to display.
+		 */
+		public function addDropdown(dropdown:Dropdown, variable, manditory:Boolean = true, error_text:String = ''):void 
+		{
+			_fields.push({ field:dropdown, variable:variable, manditory:manditory, type:FormFieldTypes.DROPDOWN, error:error_text});
+		}
+		/**
+		 * Add Additional Variable
+		 * @param	data		Data to send
+		 * @param	variable	Variable name to send to server.
+		 * @param	manditory	If checkbox is manditory.
+		 * @param	error_text	Error message to display.
+		 */
+		public function addAdditionalVariable(data:String, variable:String, manditory:Boolean = true, error_text:String = '' ):void 
 		{
 			for (var i:int = 0; i < _fields.length; ++i) 
 			{
@@ -143,7 +175,7 @@
 					_fields.splice(i, 1);
 			}
 			var t:TextField = new TextField();
-			t.text = string == null ? '' : string;
+			t.text = data == null ? '' : data;
 			_fields.push({ field:t, variable:variable, manditory:manditory, type:FormFieldTypes.TEXT_FIELD, error:error_text});
 		}
 		
@@ -160,117 +192,147 @@
 				sendForm();
 			}
 		}
-		
-		private function validate():Boolean
+		/**
+		 * Validates Form
+		 * @return	Boolean value
+		 */
+		public function validate():Boolean
 		{
 			var valid:Boolean = true;
 			_formVars = new URLVariables();
-			//for each (var key:Object in _fields)
 			for (var i:int = 0; i < _fields.length; ++i)
 			{
-				//trace(_fields[i].variable);
-				//switch (key.type)
-				switch (_fields[i].type)
+				var currentObj:Object = _fields[i] as Object;
+				switch (currentObj.type)
 				{
 					case FormFieldTypes.TEXT_FIELD :
-						if (_fields[i].manditory)
+						if (currentObj.manditory)
 						{
-							if (_fields[i].field.text == '' || _fields[i].field.text == _fields[i].defaultText)
+							if (currentObj.field.text == '' || currentObj.field.text == currentObj.defaultText)
 							{
 								valid = false;
-								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, _fields[i].error, _fields[i].field));
+								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, currentObj.error, currentObj.field));
 								return false;
 							}
-							if (_fields[i].min > 0)
+							if (currentObj.min > 0)
 							{
-								if (_fields[i].field.text.length > _fields[i].max || _fields[i].field.text.length < _fields[i].min)
+								if (currentObj.field.text.length > currentObj.max || currentObj.field.text.length < currentObj.min)
 								{
 									valid = false;
-									dispatchEvent(new FormEvent(FormEvent.FIELD_OUTOFRANGE, false, false, _fields[i].error, _fields[i].field));
+									dispatchEvent(new FormEvent(FormEvent.FIELD_OUTOFRANGE, false, false, currentObj.error, currentObj.field));
 									return false;
 								}
 							}
 						}
-						_formVars[_fields[i].variable] = _fields[i].field.text;
+						_formVars[currentObj.variable] = currentObj.field.text;
 					break;
 					case FormFieldTypes.EMAIL_FIELD :
-						if (_fields[i].manditory)
+						if (currentObj.manditory)
 						{
-							if (_fields[i].field.text == '' || _fields[i].field.text == _fields[i].defaultText || !Email.isEmail(_fields[i].field.text))
+							if (currentObj.field.text == '' || currentObj.field.text == currentObj.defaultText || !Email.isEmail(currentObj.field.text))
 							{
 								valid = false;
-								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, _fields[i].error, _fields[i].field));
+								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, currentObj.error, currentObj.field));
 								return false;
 							}
-							if (_fields[i].min > 0)
+							if (currentObj.min > 0)
 							{
-								if (_fields[i].field.text.length > _fields[i].max || _fields[i].field.text.length < _fields[i].min)
+								if (currentObj.field.text.length > currentObj.max || currentObj.field.text.length < currentObj.min)
 								{
 									valid = false;
-									dispatchEvent(new FormEvent(FormEvent.FIELD_OUTOFRANGE, false, false, _fields[i].error, _fields[i].field));
+									dispatchEvent(new FormEvent(FormEvent.FIELD_OUTOFRANGE, false, false, currentObj.error, currentObj.field));
 									return false;
 								}
 							}
 						}
-						_formVars[_fields[i].variable] = _fields[i].field.text;
+						_formVars[currentObj.variable] = currentObj.field.text;
 					break;
 					case FormFieldTypes.NUMBER_FIELD :
-						if (_fields[i].manditory)
+						if (currentObj.manditory)
 						{
-							if (_fields[i].field.text == '' || _fields[i].field.text == _fields[i].defaultText || !NumberVal.isNumber(_fields[i].field.text))
+							if (currentObj.field.text == '' || currentObj.field.text == currentObj.defaultText || !NumberVal.isNumber(currentObj.field.text))
 							{
 								valid = false;
-								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, _fields[i].error, _fields[i].field));
+								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, currentObj.error, currentObj.field));
 								return false;
 							}
-							if (_fields[i].min > 0)
+							if (currentObj.min > 0)
 							{
-								if (_fields[i].field.text.length > _fields[i].max || _fields[i].field.text.length < _fields[i].min)
+								if (currentObj.field.text.length > currentObj.max || currentObj.field.text.length < currentObj.min)
 								{
 									valid = false;
-									dispatchEvent(new FormEvent(FormEvent.FIELD_OUTOFRANGE, false, false, _fields[i].error, _fields[i].field));
+									dispatchEvent(new FormEvent(FormEvent.FIELD_OUTOFRANGE, false, false, currentObj.error, currentObj.field));
 									return false;
 								}
 							}
 						}
-						_formVars[_fields[i].variable] = _fields[i].field.text;
+						_formVars[currentObj.variable] = currentObj.field.text;
 					break;
 					case FormFieldTypes.NRIC_FIELD :
-						if (_fields[i].manditory)
+						if (currentObj.manditory)
 						{
-							if (_fields[i].field.text == '' || _fields[i].field.text == _fields[i].defaultText || !SingaporeNRIC.isNRIC(_fields[i].field.text))
+							if (currentObj.field.text == '' || currentObj.field.text == currentObj.defaultText || !SingaporeNRIC.isNRIC(currentObj.field.text))
 							{
 								valid = false;
-								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, _fields[i].error, _fields[i].field));
+								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, currentObj.error, currentObj.field));
 								return false;
 							}
-							if (_fields[i].min > 0)
+							if (currentObj.min > 0)
 							{
-								if (_fields[i].field.text.length > _fields[i].max || _fields[i].field.text.length < _fields[i].min)
+								if (currentObj.field.text.length > currentObj.max || currentObj.field.text.length < currentObj.min)
 								{
 									valid = false;
-									dispatchEvent(new FormEvent(FormEvent.FIELD_OUTOFRANGE, false, false, _fields[i].error, _fields[i].field));
+									dispatchEvent(new FormEvent(FormEvent.FIELD_OUTOFRANGE, false, false, currentObj.error, currentObj.field));
 									return false;
 								}
 							}
 						}
-						_formVars[_fields[i].variable] = _fields[i].field.text;
+						_formVars[currentObj.variable] = currentObj.field.text;
 					break;
 					case FormFieldTypes.CHECKBOX :
-						var f:Checkbox = _fields[i].field as Checkbox;
-						if (_fields[i].manditory)
+						var f:Checkbox = currentObj.field as Checkbox;
+						if (currentObj.manditory)
 						{
-							if (!f.checked)
+							if (!f.isChecked)
 							{
 								valid = false;
-								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, _fields[i].error));
+								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, currentObj.error));
 								return false;
 							}
 						}
-						if (f.checked)
-							_formVars[_fields[i].variable] = 'Y';
+						if (f.isChecked)
+							_formVars[currentObj.variable] = 'Y';
 						else
-							_formVars[_fields[i].variable] = 'N';
+							_formVars[currentObj.variable] = 'N';
+					break;
+					case FormFieldTypes.RADIO_BUTTON_GROUP :
+						var rbg:RadioButtonGroup = currentObj.field as RadioButtonGroup;
+						if (currentObj.manditory)
+						{
+							if (rbg.currentIndex == -1)
+							{
+								valid = false;
+								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, currentObj.error));
+								return false;
+							}
+						}
+						if (rbg.currentIndex == -1)
+							_formVars[currentObj.variable] = '';
+						else
+							_formVars[currentObj.variable] = rbg.radioButtons[rbg.currentIndex].data;
+					break;
+					case FormFieldTypes.DROPDOWN :
+						var d:Dropdown = currentObj.field as Dropdown;
+						if (currentObj.manditory)
+						{
+							if (d.getSelectedIndex() == 0)
+							{
+								valid = false;
+								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, currentObj.error));
+								return false;
+							}
+						}
+						_formVars[currentObj.variable] = d.getSelectedData();
 					break;
 				}
 			}
@@ -314,8 +376,6 @@
 					break;
 				}
 			}
-			//if (f.text == _fields[f.name].defaultText)
-				//f.text = '';
 		}
 		
 		private function focusOut(e:FocusEvent):void 
@@ -330,10 +390,7 @@
 					break;
 				}
 			}
-			//if (f.text == '')
-				//f.text = _fields[f.name].defaultText;
 		}
-		
 		
 	}
 

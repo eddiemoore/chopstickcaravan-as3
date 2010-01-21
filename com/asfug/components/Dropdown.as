@@ -36,19 +36,27 @@
 			_mc = mc;
 			_barHeight = _mc.height;
 			
+			items.unshift( { label:defaultText, data:'' } );
 			_itemArray = items;
 			_dropdownItem = dropdownItem;
 			_direction = direction;
 			_maskHeight = maskHeight;
 			
+			_selectedIndex = 0;
 			_dropdownOpen = false;
 			
 			_title = _mc.getChildByName('title_txt') as TextField;
 			_title.text = defaultText;
 			
 			_mc.addEventListener(MouseEvent.CLICK, dropDownClicked, false, 0, true);
+			//_mc.addEventListener(MouseEvent.MOUSE_OUT, mouseOut, false, 0, true);
 			_mc.buttonMode = true;
 		}
+		
+		/*private function mouseOut(e:MouseEvent):void 
+		{
+			closeDropDown();
+		}*/
 		
 		private function dropDownClicked(e:MouseEvent):void 
 		{
@@ -75,11 +83,9 @@
 					var item:MovieClip = new _dropdownItem();
 					item.y = yPos;
 					item.name = 'item_' + i;
-					var title:TextField = item.getChildByName('title_txt') as TextField;
-					if (typeof (_itemArray[i]) == "string")
-						title.text = _itemArray[i];
-					else
-						title.text = _itemArray[i].name;
+					
+					var title:TextField = item.getChildByName('title_txt') as TextField;						
+					title.text = (typeof (_itemArray[i]) == "string" ? _itemArray[i] : _itemArray[i].label );
 					
 					item.addEventListener(MouseEvent.CLICK, itemSelected, false, 0, true);
 					
@@ -137,11 +143,10 @@
 			var si:int = int(name.split('_')[1]);
 			if (_selectedIndex != si)
 			{
-				dispatchEvent(new DropdownEvent(DropdownEvent.ITEM_CHANGED));
 				_selectedIndex = si;
+				dispatchEvent(new DropdownEvent(DropdownEvent.ITEM_CHANGED));
 			}
-			_title.text = getSelectedName();
-			
+			_title.text = getSelectedLabel();
 		}
 		/**
 		 * Closes the drop down menu
@@ -178,12 +183,12 @@
 		 * Gets the currently selected items name
 		 * @return	Selected item name
 		 */
-		public function getSelectedName():String 
+		public function getSelectedLabel():String 
 		{ 
 			if (typeof (_itemArray[_selectedIndex]) == "string")
 				return _itemArray[_selectedIndex]; 
 			else
-				return _itemArray[_selectedIndex].name; 
+				return _itemArray[_selectedIndex].label;
 		}
 		/**
 		 * Gets currently selected items data
