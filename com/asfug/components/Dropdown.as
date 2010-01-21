@@ -202,6 +202,13 @@
 				return _itemArray[_selectedIndex].data;
 		}
 		
+		public function setSelectedIndex(index:int):void 
+		{
+			_selectedIndex = index;
+			dispatchEvent(new DropdownEvent(DropdownEvent.ITEM_CHANGED));
+			_title.text = getSelectedLabel();
+		}
+		
 	}
 
 }

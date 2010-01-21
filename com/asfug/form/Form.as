@@ -329,17 +329,17 @@
 						_formVars[currentObj.variable] = currentObj.field.text;
 					break;
 					case FormFieldTypes.CHECKBOX :
-						var f:Checkbox = currentObj.field as Checkbox;
+						var c:Checkbox = currentObj.field as Checkbox;
 						if (currentObj.manditory)
 						{
-							if (!f.isChecked)
+							if (!c.isChecked)
 							{
 								valid = false;
 								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, currentObj.error));
 								return false;
 							}
 						}
-						if (f.isChecked)
+						if (c.isChecked)
 							_formVars[currentObj.variable] = 'Y';
 						else
 							_formVars[currentObj.variable] = 'N';
@@ -426,6 +426,36 @@
 				{
 					if (f.text == '')
 						f.text = _fields[i].defaultText;
+					break;
+				}
+			}
+		}
+		
+		public function reset():void 
+		{
+			for (var i:int = 0; i < _fields.length; ++i)
+			{
+				var currentObj:Object = _fields[i] as Object;
+				switch (currentObj.type)
+				{
+					case FormFieldTypes.TEXT_FIELD :
+					case FormFieldTypes.TEXT_AREA :
+					case FormFieldTypes.EMAIL_FIELD :
+					case FormFieldTypes.NUMBER_FIELD :
+					case FormFieldTypes.NRIC_FIELD :
+						currentObj.field.text = currentObj.defaultText;
+					break;
+					case FormFieldTypes.CHECKBOX :
+						var c:Checkbox = currentObj.field as Checkbox;
+						c.defaultChecked ? c.check() : c.uncheck();
+					break;
+					case FormFieldTypes.RADIO_BUTTON_GROUP :
+						var rbg:RadioButtonGroup = currentObj.field as RadioButtonGroup;
+						rbg.reset();
+					break;
+					case FormFieldTypes.DROPDOWN :
+						var d:Dropdown = currentObj.field as Dropdown;
+						d.setSelectedIndex(0);
 					break;
 				}
 			}

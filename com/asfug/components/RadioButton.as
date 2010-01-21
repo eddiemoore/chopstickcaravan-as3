@@ -11,14 +11,17 @@
 	public class RadioButton extends EventDispatcher
 	{
 		private var _mc:MovieClip;
+		public var defaultChecked:Boolean;
 		public var isChecked:Boolean;
 		internal var name:String;
 		private var _uncheckedFrame:String;
 		private var _checkedFrame:String;
 		
+		
 		public function RadioButton(mc:MovieClip, checked:Boolean = false, checkedFrame:String = 'checked', uncheckedFrame:String = 'unchecked') 
 		{
 			_mc = mc;
+			defaultChecked = checked;
 			isChecked = checked;
 			name = _mc.name;
 			_checkedFrame = checkedFrame;

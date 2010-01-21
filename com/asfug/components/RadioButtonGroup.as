@@ -34,6 +34,15 @@
 			}
 		}
 		
+		public function reset():void 
+		{
+			for (var i:int = 0; i < _radioButtons.length; ++i) 
+			{
+				var rb:RadioButton = _radioButtons[i].rb as RadioButton;
+				rb.defaultChecked ? rb.check() : rb.uncheck();
+			}
+		}
+		
 		//public function get name():String { return _name; }
 		
 		public function get radioButtons():Array { return _radioButtons; }
