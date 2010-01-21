@@ -64,8 +64,16 @@
 				field.restrict = restrict;
 			initField(field, maxChar);
 		}
-		
-		public function addTextArea(field:TextField, variable:String, manditory:Boolean = true, error_text:String = '', restrict:String = '', max_words:int = 0):void
+		/**
+		 * Adds Text Aread
+		 * @param	field		Text field to validate
+		 * @param	variable	Variable name to send to server
+		 * @param	manditory	If field is manditory
+		 * @param	restrict	Characters to restrict in textfield
+		 * @param	error_text	Error message to display
+		 * @param	max_words	Maximum word allowed in text field
+		 */
+		public function addTextArea(field:TextField, variable:String, manditory:Boolean = true, restrict:String = '', error_text:String = '', max_words:int = 0):void
 		{
 			_fields.push( { field:field, variable:variable, defaultText:field.text, manditory:manditory, type:FormFieldTypes.TEXT_AREA, restrict:restrict, error:error_text, maxWords:max_words });
 			
@@ -430,7 +438,9 @@
 				}
 			}
 		}
-		
+		/**
+		 * Resets the form back to default values
+		 */
 		public function reset():void 
 		{
 			for (var i:int = 0; i < _fields.length; ++i)
