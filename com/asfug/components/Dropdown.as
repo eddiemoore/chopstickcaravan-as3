@@ -30,7 +30,15 @@
 		private var _itemsMc:Sprite;
 		private var _mask:Shape;
 		private var _barHeight:Number;
-		
+		/**
+		 * Creates a Drop Down
+		 * @param	mc				Movie Clip that will be the dropdown.
+		 * @param	items			Array of items that will be in the drop down. Can be array of strings ["item 1", "item 2"] etc. or an array of objects [{label:"item 1", data:"1"},{label:"item 2", data:"2"}].
+		 * @param	dropdownItem	Class that handles each item in the drop down. Must be the linkage from the library.
+		 * @param	defaultText		Text that will display in the drop down by default.
+		 * @param	direction		If the direction of the dropdown should be down or up.
+		 * @param	maskHeight		If the dropdown requires a mask, set the mask height. If mask height is 0, full dropdown list will display.
+		 */
 		public function Dropdown(mc:MovieClip, items:Array, dropdownItem:Class, defaultText:String = 'Please Select', direction:String = Dropdown.DOWN, maskHeight:int = 0 ) 
 		{
 			_mc = mc;
@@ -49,15 +57,12 @@
 			_title.text = defaultText;
 			
 			_mc.addEventListener(MouseEvent.CLICK, dropDownClicked, false, 0, true);
-			//_mc.addEventListener(MouseEvent.MOUSE_OUT, mouseOut, false, 0, true);
 			_mc.buttonMode = true;
 		}
-		
-		/*private function mouseOut(e:MouseEvent):void 
-		{
-			closeDropDown();
-		}*/
-		
+		/**
+		 * When dropdown is clicked, open or close the dropdown.
+		 * @param	e
+		 */
 		private function dropDownClicked(e:MouseEvent):void 
 		{
 			if (_dropdownOpen)
@@ -121,7 +126,10 @@
 			
 			_itemsMc.addEventListener(Event.ENTER_FRAME, moveItems);
 		}
-		
+		/**
+		 * If there is a mask on the dropdown move items up and down depending on mouse position.
+		 * @param	e
+		 */
 		private function moveItems(e:Event):void 
 		{
 			if (_mask.mouseY > _maskHeight * 0.5)
@@ -139,7 +147,10 @@
 					_itemsMc.y += 0.2 * -(_mask.mouseY - _maskHeight * .5);
 			}
 		}
-		
+		/**
+		 * On selection of item set the current selected index and set label
+		 * @param	e
+		 */
 		private function itemSelected(e:MouseEvent):void 
 		{
 			var name:String = e.currentTarget.name;

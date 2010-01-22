@@ -5,6 +5,7 @@
 	import com.asfug.components.RadioButtonGroup;
 	import com.asfug.events.FormEvent;
 	import com.asfug.utils.StringUtil;
+	import com.asfug.validation.DateTime;
 	import com.asfug.validation.Email;
 	import com.asfug.validation.NumberVal;
 	import com.asfug.validation.SingaporeNRIC;
@@ -132,6 +133,38 @@
 			initField(field, maxChar);
 		}
 		/**
+		 * Add Date Field
+		 * @param	field		Text Field to validate
+		 * @param	variable	Variable name to send to server
+		 * @param	manditory	If field is manditory
+		 * @param	error_text	Error message to display
+		 * @param	minChar		Minimum character for field.
+		 * @param	maxChar		Maximum character for field. (0 = infinate);
+		 */
+		public function addDateField(field:TextField, variable:String, manditory:Boolean = true, error_text:String = '', minChar:int=0, maxChar:int=0):void
+		{
+			_fields.push( { field:field, variable:variable, defaultText:field.text, manditory:manditory, type:FormFieldTypes.DATE_FIELD, error:error_text, min:minChar, max:maxChar });
+			
+			field.restrict = '0-9\\-';
+			initField(field, maxChar);
+		}
+		/**
+		 * Add Birthday Field
+		 * @param	field		Text Field to validate
+		 * @param	variable	Variable name to send to server
+		 * @param	manditory	If field is manditory
+		 * @param	error_text	Error message to display
+		 * @param	minChar		Minimum character for field.
+		 * @param	maxChar		Maximum character for field. (0 = infinate);
+		 */
+		public function addBirthdayField(field:TextField, variable:String, manditory:Boolean = true, error_text:String = '', minChar:int=0, maxChar:int=0):void
+		{
+			_fields.push( { field:field, variable:variable, defaultText:field.text, manditory:manditory, type:FormFieldTypes.BIRTHDAY_FIELD, error:error_text, min:minChar, max:maxChar });
+			
+			field.restrict = '0-9\\-';
+			initField(field, maxChar);
+		}
+		/**
 		 * Initialises Fields
 		 * @param	field	Field to initialise
 		 * @param	maxChar	Maximum characters in field
@@ -185,7 +218,7 @@
 		 * @param	manditory	If checkbox is manditory.
 		 * @param	error_text	Error message to display.
 		 */
-		public function addAdditionalVariable(data:String, variable:String, manditory:Boolean = true, error_text:String = '' ):void 
+		public function addAdditionalVariable(data:String, variable:String, manditory:Boolean = true, type:String = FormFieldTypes.TEXT_FIELD, error_text:String = '' ):void 
 		{
 			for (var i:int = 0; i < _fields.length; ++i) 
 			{
@@ -194,7 +227,29 @@
 			}
 			var t:TextField = new TextField();
 			t.text = data == null ? '' : data;
-			_fields.push({ field:t, variable:variable, manditory:manditory, type:FormFieldTypes.TEXT_FIELD, error:error_text});
+			_fields.push({ field:t, variable:variable, manditory:manditory, type:type, error:error_text});
+		}
+		/**
+		 * Add Additional Variable at given position in fields array
+		 * @param	data		Data to send
+		 * @param	variable	Variable name to send to server.
+		 * @param	position	Position in array to add field at. Starts from 0
+		 * @param	manditory	If checkbox is manditory.
+		 * @param	error_text	Error message to display.
+		 */
+		public function addAdditionalVariableAt(data:String, variable:String, position:int, manditory:Boolean = true, type:String = FormFieldTypes.TEXT_FIELD, error_text:String = '' ):void 
+		{
+			for (var i:int = 0; i < _fields.length; ++i) 
+			{
+				if (_fields[i].variable == variable)
+					_fields.splice(i, 1);
+			}
+			var t:TextField = new TextField();
+			t.text = data == null ? '' : data;
+			if (position > _fields.length)
+				_fields.push( { field:t, variable:variable, manditory:manditory, type:type, error:error_text } );
+			else
+				_fields.splice(position,0,{ field:t, variable:variable, manditory:manditory, type:type, error:error_text});
 		}
 		
 		/**
@@ -336,6 +391,51 @@
 						}
 						_formVars[currentObj.variable] = currentObj.field.text;
 					break;
+					case FormFieldTypes.DATE_FIELD :
+						if (currentObj.manditory)
+						{
+							if (currentObj.field.text == '' || currentObj.field.text == currentObj.defaultText || !DateTime.isDateTime(currentObj.field.text))
+							{
+								valid = false;
+								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, currentObj.error, currentObj.field));
+								return false;
+							}
+						}
+						_formVars[currentObj.variable] = currentObj.field.text;
+					break;
+					case FormFieldTypes.BIRTHDAY_FIELD :
+						if (currentObj.manditory)
+						{
+							if (currentObj.field.text == '' || currentObj.field.text == currentObj.defaultText || !DateTime.isDateTime(currentObj.field.text))
+							{
+								valid = false;
+								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, currentObj.error, currentObj.field));
+								return false;
+							}
+							else if (int((currentObj.field.text as String).split('-')[2]) > new Date().getFullYear())
+							{
+								valid = false;
+								dispatchEvent(new FormEvent(FormEvent.FIELD_OUTOFRANGE, false, false, currentObj.error, currentObj.field));
+								return false;
+							}
+							else if (int((currentObj.field.text as String).split('-')[2]) == new Date().getFullYear() && 
+									int((currentObj.field.text as String).split('-')[1]) + 1 > new Date().getMonth())
+							{
+								valid = false;
+								dispatchEvent(new FormEvent(FormEvent.FIELD_OUTOFRANGE, false, false, currentObj.error, currentObj.field));
+								return false;
+							}
+							else if (int((currentObj.field.text as String).split('-')[2]) == new Date().getFullYear() && 
+									int((currentObj.field.text as String).split('-')[1]) + 1 == new Date().getMonth() &&
+									int((currentObj.field.text as String).split('-')[0]) > new Date().getDate())
+							{
+								valid = false;
+								dispatchEvent(new FormEvent(FormEvent.FIELD_OUTOFRANGE, false, false, currentObj.error, currentObj.field));
+								return false;
+							}
+						}
+						_formVars[currentObj.variable] = currentObj.field.text;
+					break;
 					case FormFieldTypes.CHECKBOX :
 						var c:Checkbox = currentObj.field as Checkbox;
 						if (currentObj.manditory)
@@ -386,7 +486,9 @@
 			
 			return valid;
 		}
-		
+		/**
+		 * Sends form to server
+		 */
 		private function sendForm():void
 		{
 			var l:URLLoader = new URLLoader();
@@ -400,17 +502,26 @@
 			
 			l.load(req);
 		}
-		
+		/**
+		 * On form submit complete, dispatch event that form has been sent.
+		 * @param	e
+		 */
 		private function formSubmitComplete(e:Event):void 
 		{
 			dispatchEvent(new FormEvent(FormEvent.FORM_SUBMITTED, false, false, e.currentTarget.data));
 		}
-		
+		/**
+		 * If there is an error in the form, dispach error event
+		 * @param	e
+		 */
 		private function formSubmitError(e:IOErrorEvent):void 
 		{
 			dispatchEvent(new FormEvent(FormEvent.FORM_ERROR));
 		}
-		
+		/**
+		 * On text field focus in, hide default text
+		 * @param	e
+		 */
 		private function focusIn(e:FocusEvent):void 
 		{
 			var f:TextField = e.currentTarget as TextField;
@@ -424,7 +535,10 @@
 				}
 			}
 		}
-		
+		/**
+		 * On text field focus out, show default text field if text is blank
+		 * @param	e
+		 */
 		private function focusOut(e:FocusEvent):void 
 		{
 			var f:TextField = e.currentTarget as TextField;
@@ -453,6 +567,8 @@
 					case FormFieldTypes.EMAIL_FIELD :
 					case FormFieldTypes.NUMBER_FIELD :
 					case FormFieldTypes.NRIC_FIELD :
+					case FormFieldTypes.DATE_FIELD :
+					case FormFieldTypes.BIRTHDAY_FIELD :
 						currentObj.field.text = currentObj.defaultText;
 					break;
 					case FormFieldTypes.CHECKBOX :

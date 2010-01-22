@@ -9,7 +9,9 @@
 	{
 		private var _radioButtons:Array;
 		private var _currentIndex:int = -1;
-		
+		/**
+		 * Generates a Radio Button Group
+		 */
 		public function RadioButtonGroup() 
 		{
 			_radioButtons = new Array();

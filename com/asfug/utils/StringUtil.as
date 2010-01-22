@@ -9,13 +9,23 @@ package com.asfug.utils {
 		 * @param	str		input string
 		 */
 		
-		
-		public static function trim(str:String, char:String):String 
+		/**
+		 * Trims character from beginning and end of string.
+		 * @param	str		String to remove character from
+		 * @param	char	Character to trim.
+		 * @return
+		 */
+		public static function trim(str:String, char:String = ' '):String 
 		{
 			return trimBack(trimFront(str, char), char);
 		}
-
-		public static function trimFront(str:String, char:String):String 
+		/**
+		 * Trims character from front of string
+		 * @param	str		String to remove character from
+		 * @param	char	Character to trim.
+		 * @return
+		 */
+		public static function trimFront(str:String, char:String = ' '):String 
 		{
 			char = stringToCharacter(char);
 			if (str.charAt(0) == char)
@@ -23,8 +33,13 @@ package com.asfug.utils {
 				
 			return str;
 		}
-
-		public static function trimBack(str:String, char:String):String 
+		/**
+		 * Trims character from back of string
+		 * @param	str		String to remove character from
+		 * @param	char	Character to trim.
+		 * @return
+		 */
+		public static function trimBack(str:String, char:String = ' '):String 
 		{
 			char = stringToCharacter(char);
 			if (str.charAt(str.length - 1) == char)
@@ -32,14 +47,22 @@ package com.asfug.utils {
 				
 			return str;
 		}
-		
+		/**
+		 * Gets first character from a string
+		 * @param	str	String to convert into a single character
+		 * @return
+		 */
 		public static function stringToCharacter(str:String):String 
 		{
 			if (str.length == 1) 
 				return str;
 			return str.slice(0, 1);
 		}
-		
+		/**
+		 * Removes all double spacing from a string
+		 * @param	str	String to remove double spacing from
+		 * @return
+		 */
 		public static function removeDoubleSpaceing(str:String):String
 		{
 			str = str.replace(/[  ]+/g, ' ');
@@ -53,7 +76,7 @@ package com.asfug.utils {
 		 */
 		public static function addLeadingZero(n:int, numZeros:int = 1):String 
 		{
-			return (new Array(numZeros).join('0')) + n;
+			return (new Array(numZeros + 1).join('0')) + n as String;
 		}
 		
 	}
