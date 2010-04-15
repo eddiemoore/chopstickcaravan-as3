@@ -1,25 +1,4 @@
-﻿/**
-Copyright (c) 2010 A-SFUG - http://a-sfug.com
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-package com.asfug.components 
+﻿package com.asfug.components 
 {
 	import com.asfug.events.DropdownEvent;
 	import flash.display.DisplayObject;
@@ -75,6 +54,7 @@ package com.asfug.components
 			_dropdownOpen = false;
 			
 			_title = _mc.getChildByName('title_txt') as TextField;
+			_title.mouseEnabled = false;
 			_title.text = defaultText;
 			
 			_mc.addEventListener(MouseEvent.CLICK, dropDownClicked, false, 0, true);
@@ -109,8 +89,10 @@ package com.asfug.components
 					var item:MovieClip = new _dropdownItem();
 					item.y = yPos;
 					item.name = 'item_' + i;
+					item.mouseEnabled = true;
 					
-					var title:TextField = item.getChildByName('title_txt') as TextField;						
+					var title:TextField = item.getChildByName('title_txt') as TextField;
+					title.mouseEnabled = false;
 					title.text = (typeof (_itemArray[i]) == "string" ? _itemArray[i] : _itemArray[i].label );
 					
 					item.addEventListener(MouseEvent.CLICK, itemSelected, false, 0, true);
@@ -155,7 +137,7 @@ package com.asfug.components
 		{
 			if (_mask.mouseY > _maskHeight * 0.5)
 			{
-				if (_itemsMc.y <= (_mask.y - _itemsMc.height) + _maskHeight)
+				if (_itemsMc.y <= (_mask.y - _itemsMc.height) + _maskHeight + 2)
 					_itemsMc.y = (_mask.y - _itemsMc.height) + _maskHeight;
 				else
 					_itemsMc.y += 0.2 * -(_mask.mouseY - _maskHeight * .5);

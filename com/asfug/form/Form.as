@@ -1,25 +1,4 @@
-﻿/**
-Copyright (c) 2010 A-SFUG - http://a-sfug.com
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-package com.asfug.form 
+﻿package com.asfug.form 
 {
 	import com.asfug.components.Checkbox;
 	import com.asfug.components.Dropdown;
@@ -183,6 +162,44 @@ package com.asfug.form
 			_fields.push( { field:field, variable:variable, defaultText:field.text, manditory:manditory, type:FormFieldTypes.BIRTHDAY_FIELD, error:error_text, min:minChar, max:maxChar });
 			
 			field.restrict = '0-9\\-';
+			initField(field, maxChar);
+		}
+		
+		/**
+		 * Add Password Field
+		 * @param	field		Text field to validate
+		 * @param	variable	Variable name to send to server
+		 * @param	manditory	If field is manditory
+		 * @param	restrict	Characters to restrict in textfield
+		 * @param	error_text	Error message to display
+		 * @param	minChar		Minimum character for field.
+		 * @param	maxChar		Maximum character for field. (0 = infinate);
+		 */
+		public function addPasswordField(field:TextField, variable:String, manditory:Boolean = true, error_text:String = '', restrict:String = '', minChar:int=0, maxChar:int=0):void
+		{
+			_fields.push( { field:field, variable:variable, defaultText:field.text, manditory:manditory, type:FormFieldTypes.PASSWORD_FIELD, restrict:restrict, error:error_text, min:minChar, max:maxChar });
+			
+			if (restrict.length > 0)
+				field.restrict = restrict;
+			initField(field, maxChar);
+		}
+		
+		/**
+		 * Add Confirm Password Field
+		 * @param	field		Text field to validate
+		 * @param	variable	Variable name to send to server
+		 * @param	manditory	If field is manditory
+		 * @param	restrict	Characters to restrict in textfield
+		 * @param	error_text	Error message to display
+		 * @param	minChar		Minimum character for field.
+		 * @param	maxChar		Maximum character for field. (0 = infinate);
+		 */
+		public function addConfirmPasswordField(field:TextField, check_against:TextField, variable:String, manditory:Boolean = true, error_text:String = '', restrict:String = '', minChar:int=0, maxChar:int=0):void
+		{
+			_fields.push( { field:field, check_against:check_against, variable:variable, defaultText:field.text, manditory:manditory, type:FormFieldTypes.CONFIRM_PASSWORD_FIELD, restrict:restrict, error:error_text, min:minChar, max:maxChar });
+			
+			if (restrict.length > 0)
+				field.restrict = restrict;
 			initField(field, maxChar);
 		}
 		/**
@@ -457,6 +474,60 @@ package com.asfug.form
 						}
 						_formVars[currentObj.variable] = currentObj.field.text;
 					break;
+					case FormFieldTypes.PASSWORD_FIELD :
+						if (currentObj.manditory)
+						{
+							if (currentObj.field.text == '' || currentObj.field.text == currentObj.defaultText)
+							{
+								valid = false;
+								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, currentObj.error, currentObj.field));
+								return false;
+							}
+							if (currentObj.min > 0)
+							{
+								if (currentObj.field.text.length > currentObj.max || currentObj.field.text.length < currentObj.min)
+								{
+									valid = false;
+									dispatchEvent(new FormEvent(FormEvent.FIELD_OUTOFRANGE, false, false, currentObj.error, currentObj.field));
+									return false;
+								}
+							}
+						}
+						if (currentObj.field.text == currentObj.defaultText)
+							_formVars[currentObj.variable] = '';
+						else
+							_formVars[currentObj.variable] = currentObj.field.text;
+					break;
+					case FormFieldTypes.CONFIRM_PASSWORD_FIELD :
+						if (currentObj.manditory)
+						{
+							if (currentObj.field.text == '' || currentObj.field.text == currentObj.defaultText)
+							{
+								valid = false;
+								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, currentObj.error, currentObj.field));
+								return false;
+							}
+							if (currentObj.field.text != currentObj.check_against.text)
+							{
+								valid = false;
+								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, currentObj.error, currentObj.field));
+								return false;
+							}
+							if (currentObj.min > 0)
+							{
+								if (currentObj.field.text.length > currentObj.max || currentObj.field.text.length < currentObj.min)
+								{
+									valid = false;
+									dispatchEvent(new FormEvent(FormEvent.FIELD_OUTOFRANGE, false, false, currentObj.error, currentObj.field));
+									return false;
+								}
+							}
+						}
+						if (currentObj.field.text == currentObj.defaultText)
+							_formVars[currentObj.variable] = '';
+						else
+							_formVars[currentObj.variable] = currentObj.field.text;
+					break;
 					case FormFieldTypes.CHECKBOX :
 						var c:Checkbox = currentObj.field as Checkbox;
 						if (currentObj.manditory)
@@ -590,6 +661,8 @@ package com.asfug.form
 					case FormFieldTypes.NRIC_FIELD :
 					case FormFieldTypes.DATE_FIELD :
 					case FormFieldTypes.BIRTHDAY_FIELD :
+					case FormFieldTypes.PASSWORD_FIELD :
+					case FormFieldTypes.CONFIRM_PASSWORD_FIELD :
 						currentObj.field.text = currentObj.defaultText;
 					break;
 					case FormFieldTypes.CHECKBOX :
