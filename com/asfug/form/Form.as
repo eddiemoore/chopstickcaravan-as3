@@ -298,7 +298,6 @@
 		{
 			if (validate())
 			{
-				dispatchEvent(new FormEvent(FormEvent.FORM_VALID));
 				trace(_formVars);
 				sendForm();
 			}
@@ -576,6 +575,8 @@
 				}
 			}
 			
+			if (valid) 
+				dispatchEvent(new FormEvent(FormEvent.FORM_VALID));
 			return valid;
 		}
 		/**
@@ -663,7 +664,7 @@
 					case FormFieldTypes.BIRTHDAY_FIELD :
 					case FormFieldTypes.PASSWORD_FIELD :
 					case FormFieldTypes.CONFIRM_PASSWORD_FIELD :
-						currentObj.field.text = currentObj.defaultText;
+						currentObj.field.text = currentObj.defaultText == null ? '' : currentObj.defaultText;
 					break;
 					case FormFieldTypes.CHECKBOX :
 						var c:Checkbox = currentObj.field as Checkbox;

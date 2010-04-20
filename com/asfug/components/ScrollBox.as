@@ -38,6 +38,7 @@
 		
 		public function scroll(scroll_to:Number):void
 		{
+			if (scroll_to > 1) scroll_to = 1;
 			_scrollbar.dispatchEvent(new ScrollBarEvent(scroll_to));
 		}
 		
