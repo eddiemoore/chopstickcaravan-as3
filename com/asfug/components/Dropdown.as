@@ -51,33 +51,57 @@ package com.asfug.components
 		private var _itemsMc:Sprite;
 		private var _mask:Shape;
 		private var _barHeight:Number;
+		private var _displayDefault:Boolean;
+		private var _defaultText:String;
 		/**
 		 * Creates a Drop Down
 		 * @param	mc				Movie Clip that will be the dropdown.
 		 * @param	items			Array of items that will be in the drop down. Can be array of strings ["item 1", "item 2"] etc. or an array of objects [{label:"item 1", data:"1"},{label:"item 2", data:"2"}].
 		 * @param	dropdownItem	Class that handles each item in the drop down. Must be the linkage from the library.
 		 * @param	defaultText		Text that will display in the drop down by default.
+		 * @param	displayDefaultInDropdown	Change if you want the default text is to be displayed in the dropdown or not.
 		 * @param	direction		If the direction of the dropdown should be down or up.
 		 * @param	maskHeight		If the dropdown requires a mask, set the mask height. If mask height is 0, full dropdown list will display.
 		 */
-		public function Dropdown(mc:MovieClip, items:Array, dropdownItem:Class, defaultText:String = 'Please Select', direction:String = Dropdown.DOWN, maskHeight:int = 0 ) 
+		public function Dropdown(mc:MovieClip, items:Array, dropdownItem:Class, defaultText:String = 'Please Select', displayDefaultInDropdown:Boolean = true, direction:String = Dropdown.DOWN, maskHeight:int = 0 ) 
 		{
 			_mc = mc;
 			_barHeight = _mc.height;
 			
-			items.unshift( { label:defaultText, data:'' } );
+			_displayDefault = displayDefaultInDropdown;
+			_defaultText = defaultText;
+			if (_displayDefault)
+			{
+				items.unshift( { label:defaultText, data:'' } );
+				_selectedIndex = 0;
+			}
+			else
+			{
+				_selectedIndex = -1;
+			}
 			_itemArray = items;
 			_dropdownItem = dropdownItem;
 			_direction = direction;
 			_maskHeight = maskHeight;
 			
-			_selectedIndex = 0;
+			
 			_dropdownOpen = false;
 			
 			_title = _mc.getChildByName('title_txt') as TextField;
 			_title.mouseEnabled = false;
 			_title.text = defaultText;
 			
+			enable();
+		}
+		
+		public function disable():void
+		{
+			_mc.removeEventListener(MouseEvent.CLICK, dropDownClicked);
+			_mc.buttonMode = false;
+		}
+		
+		public function enable():void
+		{
 			_mc.addEventListener(MouseEvent.CLICK, dropDownClicked, false, 0, true);
 			_mc.buttonMode = true;
 		}
@@ -223,10 +247,17 @@ package com.asfug.components
 		 */
 		public function getSelectedLabel():String 
 		{ 
-			if (typeof (_itemArray[_selectedIndex]) == "string")
-				return _itemArray[_selectedIndex]; 
+			if (_selectedIndex > -1)
+			{
+				if (typeof (_itemArray[_selectedIndex]) == "string")
+					return _itemArray[_selectedIndex]; 
+				else
+					return _itemArray[_selectedIndex].label;
+			}
 			else
-				return _itemArray[_selectedIndex].label;
+			{
+				return _title.text;
+			}
 		}
 		/**
 		 * Gets currently selected items data
@@ -249,6 +280,10 @@ package com.asfug.components
 			dispatchEvent(new DropdownEvent(DropdownEvent.ITEM_CHANGED));
 			_title.text = getSelectedLabel();
 		}
+		
+		public function getDisplayDefault():Boolean { return _displayDefault; }
+		
+		public function getDefaultText():String { return _defaultText; }
 		
 	}
 

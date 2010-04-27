@@ -584,7 +584,7 @@ package com.asfug.form
 						var d:Dropdown = currentObj.field as Dropdown;
 						if (currentObj.manditory)
 						{
-							if (d.getSelectedIndex() == 0)
+							if ((d.getSelectedIndex() == 0 && d.getDisplayDefault() == true) || d.getSelectedLabel() == d.getDefaultText())
 							{
 								valid = false;
 								dispatchEvent(new FormEvent(FormEvent.FIELD_ERROR, false, false, currentObj.error));
