@@ -109,7 +109,7 @@ package com.asfug.components
 		 * When dropdown is clicked, open or close the dropdown.
 		 * @param	e
 		 */
-		private function dropDownClicked(e:MouseEvent):void 
+		internal function dropDownClicked(e:MouseEvent):void 
 		{
 			if (_dropdownOpen)
 				closeDropDown();
@@ -199,7 +199,7 @@ package com.asfug.components
 		 * On selection of item set the current selected index and set label
 		 * @param	e
 		 */
-		private function itemSelected(e:MouseEvent):void 
+		internal function itemSelected(e:MouseEvent):void 
 		{
 			var name:String = e.currentTarget.name;
 			var si:int = int(name.split('_')[1]);
@@ -215,6 +215,7 @@ package com.asfug.components
 		 */
 		public function closeDropDown():void
 		{
+			trace('calsld');
 			if (_mc.getChildByName('masker') as Shape)
 			{
 				_itemsMc.removeEventListener(Event.ENTER_FRAME, moveItems);
@@ -284,6 +285,17 @@ package com.asfug.components
 		public function getDisplayDefault():Boolean { return _displayDefault; }
 		
 		public function getDefaultText():String { return _defaultText; }
+		
+		public function get direction():String { return _direction; }
+		
+		public function get itemArray():Array { return _itemArray; }
+		
+		public function get dropdownOpen():Boolean { return _dropdownOpen; }
+		
+		public function set dropdownOpen(value:Boolean):void 
+		{
+			_dropdownOpen = value;
+		}
 		
 	}
 

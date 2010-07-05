@@ -31,7 +31,7 @@ package com.asfug.components
 	 */
 	public class ScrollBox extends EventDispatcher
 	{
-		private var _mc:MovieClip;
+		private var _instance:MovieClip;
 		private var _scrollbar:ScrollBar;
 		private var _sb:MovieClip;
 		private var _mask:MovieClip;
@@ -39,17 +39,17 @@ package com.asfug.components
 		
 		public function ScrollBox(mc:MovieClip, stage:Stage):void 
 		{
-			_mc = mc;
-			_content = _mc.getChildByName("content") as MovieClip;
-			_mask = _mc.getChildByName("masker") as MovieClip;
+			_instance = mc;
+			_content = _instance.getChildByName("content") as MovieClip;
+			_mask = _instance.getChildByName("masker") as MovieClip;
 			
 			_content.mask = _mask;
 			
-			_sb = _mc.getChildByName("sb") as MovieClip;
+			_sb = _instance.getChildByName("sb") as MovieClip;
 			_scrollbar = new ScrollBar(_sb, stage);
 			_scrollbar._thumb.buttonMode = true;
 			_scrollbar.addEventListener(ScrollBarEvent.VALUE_CHANGED, sbChange);
-			_mc.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheelEvent, true);
+			_instance.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheelEvent, true);
 		}
 
 		private function sbChange(e:ScrollBarEvent)
@@ -118,5 +118,7 @@ package com.asfug.components
 		public function get content():MovieClip { return _content; }
 		
 		public function get mask():MovieClip { return _mask; }
+		
+		public function get instance():MovieClip { return _instance; }
 	}
 }
