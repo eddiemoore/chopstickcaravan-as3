@@ -52,7 +52,7 @@ package com.asfug.form
 		
 		//private var _fields:Dictionary;
 		private var _fields:Array;
-		private var _formVars:URLVariables;
+		protected var _formVars:URLVariables;
 		
 		/**
 		 * New Form
