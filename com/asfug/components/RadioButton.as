@@ -54,8 +54,9 @@ package com.asfug.components
 			_checkedFrame = checkedFrame;
 			_uncheckedFrame = uncheckedFrame;
 			
-			if (isChecked)	check();
-			else			uncheck();
+			/* if (isChecked)	check();
+			else			uncheck(); */
+			isChecked ? check() : uncheck();
 			
 			_mc.addEventListener(MouseEvent.CLICK, hClick);
 			_mc.mouseChildren = false;

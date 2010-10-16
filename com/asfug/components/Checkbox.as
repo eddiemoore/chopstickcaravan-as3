@@ -47,10 +47,11 @@ package com.asfug.components
 		 */
 		override protected function hClick(e:MouseEvent):void 
 		{
-			if (isChecked)
+			/*if (isChecked)
 				uncheck();
 			else
-				check();
+				check();*/
+			isChecked ? uncheck() : check();
 		}
 		
 	}
