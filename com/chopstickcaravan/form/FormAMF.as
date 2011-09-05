@@ -1,8 +1,8 @@
-package com.asfug.form 
+package com.chopstickcaravan.form 
 {
-	import com.asfug.events.FormAMFEvent;
-	import com.asfug.events.FormEvent;
-	import com.asfug.form.Form;
+	import com.chopstickcaravan.events.FormAMFEvent;
+	import com.chopstickcaravan.events.FormEvent;
+	import com.chopstickcaravan.form.Form;
 	import flash.net.NetConnection;
 	import flash.net.Responder;
 	import flash.net.URLVariables;

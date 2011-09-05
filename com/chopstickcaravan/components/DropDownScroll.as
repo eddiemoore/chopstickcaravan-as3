@@ -1,6 +1,6 @@
-package com.asfug.components 
+package com.chopstickcaravan.components 
 {
-	import com.asfug.events.DropdownEvent;
+	import com.chopstickcaravan.events.DropdownEvent;
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;

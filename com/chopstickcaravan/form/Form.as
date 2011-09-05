@@ -19,17 +19,17 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-package com.asfug.form 
+package com.chopstickcaravan.form 
 {
-	import com.asfug.components.Checkbox;
-	import com.asfug.components.Dropdown;
-	import com.asfug.components.RadioButtonGroup;
-	import com.asfug.events.FormEvent;
-	import com.asfug.utils.StringUtil;
-	import com.asfug.validation.DateTime;
-	import com.asfug.validation.Email;
-	import com.asfug.validation.NumberVal;
-	import com.asfug.validation.SingaporeNRIC;
+	import com.chopstickcaravan.components.Checkbox;
+	import com.chopstickcaravan.components.Dropdown;
+	import com.chopstickcaravan.components.RadioButtonGroup;
+	import com.chopstickcaravan.events.FormEvent;
+	import com.chopstickcaravan.utils.StringUtil;
+	import com.chopstickcaravan.validation.DateTime;
+	import com.chopstickcaravan.validation.Email;
+	import com.chopstickcaravan.validation.NumberVal;
+	import com.chopstickcaravan.validation.SingaporeNRIC;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.FocusEvent;
